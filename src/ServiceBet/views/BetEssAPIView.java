@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ServiceBetAPITest.views;
+package ServiceBet.views;
 
 /**
  *
  * @author Perez_25
  */
-public class ApostaView {
+public class BetEssAPIView {
     
 }

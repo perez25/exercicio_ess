@@ -1,7 +1,8 @@
-package ServiceBetAPITest;
+package ServiceBet.APITest;
 
-import ServiceBetAPITest.models.Apostador;
-import ServiceBetAPITest.models.Evento;
+import ServiceBet.Facade.BetESSAPI;
+import ServiceBet.models.Apostador;
+import ServiceBet.models.Evento;
 
 public class ServiceBetAPITest {
 
@@ -19,7 +20,14 @@ public class ServiceBetAPITest {
 
         Evento evento3 = casaApostas.registaEvento();
         evento3.actualizaOdd(1, 5, 3);
-
+        
+        Apostador apostador1 = casaApostas.registaApostador();
+        Apostador apostador2 = casaApostas.registaApostador();
+        casaApostas.listarApostadores();
+        
+        
+        
+        /*
         // Registar dois apostadores
         Apostador apostador1 = casaApostas.registaApostador();
         casaApostas.actualizaApostador(apostador1);
@@ -43,7 +51,7 @@ public class ServiceBetAPITest {
         // Bokkie bookie1 = casaApostas.registaBookie();
         // Evento evento1 = casaApostas.registaEvento(bookie1);
         // casaApostas.fechaEvento(bookie, evento1);
-
+                */
 
 
 
