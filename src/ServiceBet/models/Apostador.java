@@ -1,8 +1,6 @@
 package ServiceBet.models;
 
-import ServiceBet.Observer.Observer;
-
-public class Apostador implements Observer {
+public class Apostador {
 
     private String email;
     private double betESScoins;
@@ -45,8 +43,12 @@ public class Apostador implements Observer {
         this.nome = nome;
     }
 
-    @Override
-    public void update(String notificacao) {
-
+    public void adicionaBetEssCoins(double montante) {
+        this.betESScoins += montante;
     }
+
+    public void removeBetEssCoins(double montante) {
+        this.betESScoins -= montante;
+    }
+
 }

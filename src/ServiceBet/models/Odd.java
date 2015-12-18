@@ -42,6 +42,7 @@ public class Odd {
         this.odd2 = odd2;
     }
 
+    @Override
     public Odd clone() {
         Odd newOdd = new Odd();
         newOdd.setOdd1(this.odd1);
@@ -49,4 +50,14 @@ public class Odd {
         newOdd.setOddx(this.oddx);
         return newOdd;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder s = new StringBuilder();
+        s.append("Odd1 - ").append(odd1).append("\n");
+        s.append("Oddx - ").append(oddx).append("\n");
+        s.append("Odd2 - ").append(odd2).append("\n");
+        return s.toString();
+    }
+
 }

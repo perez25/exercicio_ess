@@ -1,8 +1,15 @@
 package ServiceBet.Observer;
 
+import ServiceBet.models.Bookie;
+
 public interface Subject {
 
-    void notifyApostadores();
- 
-    
+    void notificaApostadores();
+
+    void notificaBookies();
+
+    void adicionaObserver(Bookie bookie);
+
+    void removeObserver(Bookie bookie);
+
 }

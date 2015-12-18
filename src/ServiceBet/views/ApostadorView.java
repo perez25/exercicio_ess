@@ -9,41 +9,65 @@ package ServiceBet.views;
  *
  * @author Perez_25
  */
-public class ApostadorView extends View {
+public class ApostadorView extends View implements MetodosView {
 
-    public void viewActualiza(String notificacao, String nome) {
+    public void viewActualizaNotificacao(String notificacao, String nome) {
         System.out.println("\nApostador(" + nome + "):" + notificacao + "\n");
     }
 
-    public void viewCriaApostador() {
+    @Override
+    public void viewCria() {
+        System.out.println("Cria apostador");
         System.out.println("Introduza os seguintes dados de Apostador: (Nome, email, montante betESScoins\n");
     }
 
-    public void viewActualizeApostador(String nome, String email, Float betESSCoins) {
-        System.out.print("Os seus dados actuais são: (Nome(" + nome + "), email(" + email + "), montante betESScoins(" + betESSCoins + ")\n");
+    @Override
+    public void viewAtualiza() {
         System.out.println("Introduza os novos dados de Apostador: (Nome, email, montante betESScoins\n");
     }
 
-    public void viewApostador(String nome, String email, Float betESSCoins) {
+    public void viewMostra(String nome, String email, Float betESSCoins) {
         System.out.println("Apostador{ email=" + email + "  betESScoins=" + betESSCoins + ", name=" + nome + "}");
     }
 
-    public void viewApagaApostador() {
-        System.out.println("Insira o nome do apostador :");
+    @Override
+    public void viewApaga() {
+        System.out.println("Apagar apostador");
     }
 
     public void viewJaExisteApostador(String email) {
         System.out.println("Já existe um apostador com o email = " + email);
     }
 
-    public void viewSucessoCriaApostador() {
+    
+    @Override
+    public void viewCriaSucesso() {
         System.out.println("Sucesso na criação do apostador !");
     }
-    
-    public void viewSucessoApagarApostador(String email){
-        System.out.println("Apostador com o email = "+email+" apagado do sistema !");
+
+    @Override
+    public void viewCriaErro() {
+        System.out.println("Erro ao criar apostador!");
     }
 
-   
+    @Override
+    public void viewApagaErro() {
+        System.out.println("Erro ao apagar apostador!");
+    }
+
+    @Override
+    public void viewApagaSucesso() {
+        System.out.println("Sucesso ao apagar apostador!");
+    }
+
+    @Override
+    public void viewAtualizaSucesso() {
+        System.out.println("Sucesso ao atualizar apostador!");
+    }
+
+    @Override
+    public void viewAtualizaErro() {
+        System.out.println("Erro ao atualizar apostador!");
+    }
 
 }

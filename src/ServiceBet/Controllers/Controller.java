@@ -3,12 +3,19 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ServiceBet.main;
+package ServiceBet.Controllers;
 
 /**
  *
  * @author Perez_25
  */
-public class ServiceBet {
+public abstract  class Controller {
     
+
+    public String[] splitStringPorToken(String readinput, String token) {
+        String[] tokens = readinput.split(token);
+        return tokens;
+    }
+
+
 }

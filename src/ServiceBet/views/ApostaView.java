@@ -9,14 +9,55 @@ package ServiceBet.views;
  *
  * @author Perez_25
  */
-public class ApostaView extends View {
+public class ApostaView extends View implements MetodosView {
 
-    public void viewCriaAposta() {
+    @Override
+    public void viewCria() {
         System.out.println("Introduza o resultado e o montante a apostar: montante, resultado\n");
     }
 
-    public void viewMostraAposta(char aposta, float montante) {
+    @Override
+    public void viewAtualiza() {
+        System.out.println("Introduza o resultado e o montante a apostar: montante, resultado\n");
+    }
+
+    public void viewMostra(String aposta, String montante) {
         System.out.println("Apostou no resultado" + aposta + " o montante :" + montante);
+    }
+
+    @Override
+    public void viewApaga() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void viewCriaSucesso() {
+        System.out.println("Aposta criada com sucesso!");
+    }
+
+    @Override
+    public void viewCriaErro() {
+        System.out.println("Erro ao  criar a aposta!");
+    }
+
+    @Override
+    public void viewApagaErro() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void viewApagaSucesso() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void viewAtualizaSucesso() {
+        System.out.println("Aposta atualizada com sucesso!");
+    }
+
+    @Override
+    public void viewAtualizaErro() {
+        System.out.println("Erro ao atualizar a aposta!");
     }
 
 }

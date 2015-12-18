@@ -15,14 +15,17 @@ import ServiceBet.views.ApostaView;
  *
  * @author Perez_25
  */
-public class ApostaController {
+public class ApostaController extends Controller {
 
     private Aposta modelo;
     private ApostaView view;
-
+    
+    
     public ApostaController(Aposta modelo, ApostaView view) {
+        
         this.modelo = modelo;
         this.view = view;
+        
     }
 
     public void setApostador(Apostador apostador) {
@@ -57,19 +60,29 @@ public class ApostaController {
         this.modelo.defineResultado(resultado);
     }
 
-    public void aposta(Apostador apostador,char resultado) {
-        this.view.viewCriaAposta();
+    public Aposta cria(Apostador apostador) {
+        this.view.viewCria();
         String readinput = this.view.getString();
         String[] tokens = readinput.split(",");
         this.modelo.aposta(Float.parseFloat(tokens[0]), tokens[1]);
         this.setApostador(apostador);
-        this.defineResultado(resultado);
-        
-       
+        return this.modelo;
     }
 
-    public void updateAposta() {
+    public void actualiza() {
+        this.view.viewAtualiza();
+        String readinput = this.view.getString();
+        String[] tokens = this.splitStringPorToken(readinput, ",");
+        this.modelo.aposta(Float.parseFloat(tokens[0]), tokens[1]);
 
+    }
+
+    public void mostra() {
+        this.view.viewMostra(String.valueOf(this.modelo.getResultado()), String.valueOf(this.modelo.getMAposta()));
+    }
+
+    public boolean apaga() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

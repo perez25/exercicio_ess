@@ -26,6 +26,15 @@ public class Aposta {
 
     }
 
+    public Aposta(Aposta aposta) {
+        this.id = aposta.getId();
+        this.apostador = aposta.getApostador();
+        this.montanteAposta = aposta.getMAposta();
+        this.resultado = aposta.getResultado();
+        this.oddFixada = aposta.getOddFixada();
+
+    }
+
     public void defineResultado(char resultado) {
 
         switch (resultado) {
@@ -45,7 +54,7 @@ public class Aposta {
      * @return the id
      */
     public int getId() {
-        
+
         return id;
     }
 
@@ -89,6 +98,11 @@ public class Aposta {
         this.resultado = resultado;
     }
 
+    /**
+     *
+     * @param montante
+     * @param resultado
+     */
     public void aposta(float montante, String resultado) {
 
         switch (resultado) {
@@ -105,6 +119,41 @@ public class Aposta {
 
         this.setMAposta(montante);
 
+    }
+
+    /**
+     * Calcula o prémio resultante numa aposta na odd1 de um evento
+     *
+     * @return
+     */
+    public int calculaPremioDeOdd1() {
+
+        return (int) (this.getMAposta() * this.getOddFixada().getOdd1());
+    }
+
+    /**
+     * Calcula o prémio resultante numa aposta na odd2 de um evento
+     *
+     * @return
+     */
+    public int calculaPremioDeOdd2() {
+
+        return (int) (this.getMAposta() * this.getOddFixada().getOdd2());
+    }
+
+    /**
+     * Calcula o prémio resultante numa aposta na oddx de um evento
+     *
+     * @return
+     */
+    public int calculaPremioDeOddx() {
+
+        return (int) (this.getMAposta() * this.getOddFixada().getOddx());
+    }
+
+    @Override
+    public Aposta clone() {
+        return new Aposta(this);
     }
 
 }

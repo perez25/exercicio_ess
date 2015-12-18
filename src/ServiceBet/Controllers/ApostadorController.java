@@ -5,8 +5,8 @@
  */
 package ServiceBet.Controllers;
 
+import ServiceBet.Observer.Observer;
 import ServiceBet.models.Apostador;
-import ServiceBet.models.Input;
 import ServiceBet.views.ApostadorView;
 import java.util.HashMap;
 
@@ -14,14 +14,18 @@ import java.util.HashMap;
  *
  * @author Perez_25
  */
-public class ApostadorController {
+public class ApostadorController extends Controller implements Observer {
 
-    private ApostadorView view;
+    private final ApostadorView view;
     private Apostador modelo;
 
     public ApostadorController(ApostadorView view, Apostador modelo) {
         this.view = view;
         this.modelo = modelo;
+    }
+
+    public void setApostador(Apostador apostador) {
+        this.modelo = apostador;
     }
 
     public void setNomeDeApostador(String nome) {
@@ -48,15 +52,19 @@ public class ApostadorController {
         return this.modelo.getBetESScoins();
     }
 
+    public void adicionaBetEssCoinsAoSaldoDeApostador(double montante) {
+        this.setBetEssCoins(this.getBetEssCoinsDeApostador() + montante);
+    }
+
     public boolean verificaSeExisteApostador(String email, HashMap<String, Apostador> listaApostadores) {
         return listaApostadores.containsKey(email);
     }
 
-    public Apostador criaApostador(HashMap<String, Apostador> listaApostadores) {
-        this.view.viewCriaApostador();
-        Input in = new Input();
+    public Apostador cria(HashMap<String, Apostador> listaApostadores) {
+        this.view.viewCria();
+
         String readinput = this.view.getString();
-        String[] tokens = readinput.split(",");
+        String[] tokens = this.splitStringPorToken(readinput, ",");
 
         this.setNomeDeApostador(tokens[0]);
         this.setEmailDeApostador(tokens[1]);
@@ -64,37 +72,44 @@ public class ApostadorController {
 
         if (!verificaSeExisteApostador(tokens[1], listaApostadores)) {
             listaApostadores.put(tokens[1], this.modelo);
-            this.view.viewSucessoCriaApostador();
+            this.view.viewCriaSucesso();
             return this.modelo;
         }
-        this.view.viewJaExisteApostador(tokens[2]);
+        this.view.viewJaExisteApostador(tokens[1]);
         return null;
     }
 
-    public boolean updateApostador() {
-        this.view.viewActualizeApostador(this.modelo.getNome(), this.modelo.getEmail(), (float) this.modelo.getBetESScoins());
+    public boolean atualiza() {
+
+        this.view.viewAtualiza();
         String readinput = this.view.getString();
-        String[] tokens = readinput.split(",");
+        String[] tokens = this.splitStringPorToken(readinput, ",");
         this.setNomeDeApostador(tokens[0]);
         this.setEmailDeApostador(tokens[1]);
         this.setBetEssCoins(Double.parseDouble(tokens[2]));
         return true;
     }
 
-    public void listaApostador() {
-        this.view.viewApostador(this.getNomeDeApostador(), this.getEmailDeApostador(), (float) this.getBetEssCoinsDeApostador());
+    public void lista() {
+        this.view.viewMostra(this.getNomeDeApostador(), this.getEmailDeApostador(), (float) this.getBetEssCoinsDeApostador());
     }
 
-    public boolean apagaApostador(String email, HashMap<String, Apostador> listaApostadores) {
+    public boolean apaga(String email, HashMap<String, Apostador> listaApostadores) {
         for (Apostador apostador : listaApostadores.values()) {
             if (apostador.getEmail().equals(email)) {
-                   listaApostadores.remove(email);
-                   this.view.viewSucessoApagarApostador(email);
-                   return true;
+                listaApostadores.remove(email);
+                this.view.viewApagaSucesso();
+                return true;
             }
         }
-
+        this.view.viewApagaErro();
         return false;
+    }
+
+    @Override
+    public void update(String notificacao) {
+        this.view.viewActualizaNotificacao(notificacao, this.getNomeDeApostador());
+
     }
 
 }

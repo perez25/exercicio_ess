@@ -1,7 +1,6 @@
 package ServiceBet.models;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class Evento {
 
@@ -10,45 +9,41 @@ public class Evento {
         VITORIA, DERROTA, EMPATE
     }
 
-    private static AtomicInteger idUnico = new AtomicInteger();
     private int id;
     private String equipa1;
     private String equipa2;
     private Resultado resultadoFinal;
     private Date dataEvento;
-
-    private HashMap<Integer, Aposta> listaApostas;
-    private boolean estadoEvento;
+    private Bookie bookie;
+    private Map<Integer, Aposta> listaApostas;
+    private boolean estaAberto;
     private Odd odds;
+    private Set<Bookie> listaBookiesASeguir;
 
-    public Evento(String equipa1, String equipa2, Date data) {
+    public Evento(String equipa1, String equipa2, Date data, Bookie bookie) {
         this.equipa1 = equipa1;
         this.equipa2 = equipa2;
-        this.estadoEvento = false;
+        this.estaAberto = true;
         this.resultadoFinal = null;
         this.dataEvento = data;
-        this.id = idUnico.getAndIncrement();
+        this.id = 0;
         this.odds = new Odd();
         this.listaApostas = new HashMap<>();
+        this.bookie = bookie;
+        this.listaBookiesASeguir = new HashSet<>();
     }
 
-    public Evento() {
-        this.equipa1 = null;
-        this.equipa2 = null;
-        this.estadoEvento = false;
+    public Evento(Bookie bookie) {
+        this.equipa1 = "";
+        this.equipa2 = "";
+        this.estaAberto = true;
         this.resultadoFinal = null;
         this.dataEvento = null;
-        this.id = idUnico.getAndIncrement();
+        this.id = 0;
         this.odds = new Odd();
         this.listaApostas = new HashMap<>();
-    }
-
-    public static AtomicInteger getIdUnico() {
-        return idUnico;
-    }
-
-    public static void setIdUnico(AtomicInteger idUnico) {
-        Evento.idUnico = idUnico;
+        this.bookie = bookie;
+        this.listaBookiesASeguir = new HashSet<>();
     }
 
     public int getId() {
@@ -76,7 +71,8 @@ public class Evento {
     }
 
     public Resultado getResultadoFinal() {
-        return resultadoFinal;
+        return this.resultadoFinal;
+
     }
 
     public void setResultadoFinal(Resultado resultadoFinal) {
@@ -91,20 +87,12 @@ public class Evento {
         this.dataEvento = dataEvento;
     }
 
-    public HashMap<Integer, Aposta> getListaApostas() {
+    public Map<Integer, Aposta> getListaApostas() {
         return listaApostas;
     }
 
     public void setListaApostas(HashMap<Integer, Aposta> listaApostas) {
         this.listaApostas = listaApostas;
-    }
-
-    public boolean isEstadoEvento() {
-        return estadoEvento;
-    }
-
-    public void setEstadoEvento(boolean estadoEvento) {
-        this.estadoEvento = estadoEvento;
     }
 
     public Odd getOdds() {
@@ -115,7 +103,51 @@ public class Evento {
         this.odds = odds;
     }
 
-   
+    /**
+     * @return the estaAberto
+     */
+    public boolean isEstaAberto() {
+        return estaAberto;
+    }
+
+    /**
+     * @param estaAberto the estaAberto to set
+     */
+    public void setEstaAberto(boolean estaAberto) {
+        this.estaAberto = estaAberto;
+    }
+
+    /**
+     * @return the bookie
+     */
+    public Bookie getBookie() {
+        return bookie;
+    }
+
+    /**
+     * @param bookie the bookie to set
+     */
+    public void setBookie(Bookie bookie) {
+        this.bookie = bookie;
+    }
+
+    public Set<Bookie> getListaBookiesASeguir() {
+        return listaBookiesASeguir;
+    }
+
+    public void setListaBookiesASeguir(Set<Bookie> listaBookiesASeguir) {
+        this.listaBookiesASeguir = listaBookiesASeguir;
+    }
+
+    public void adicionaAposta(Aposta aposta) {
+        this.listaApostas.put(aposta.getId(), aposta);
+    }
+
+    public void removeAposta(Aposta aposta) {
+        this.listaApostas.remove(aposta.getId());
+
+    }
+
     public boolean actualizaOdd(int odd1, int oddx, int odd2) {
         this.odds.setOddx(oddx);
         this.odds.setOdd1(odd1);
@@ -123,5 +155,38 @@ public class Evento {
         return true;
     }
 
-  
+    public void defineResultadoFinal(char resultadoFinal) {
+        switch (resultadoFinal) {
+            case '1':
+                this.resultadoFinal = Evento.Resultado.VITORIA;
+                break;
+            case 'x':
+                this.resultadoFinal = Evento.Resultado.EMPATE;
+                break;
+            case '2':
+                this.resultadoFinal = Evento.Resultado.DERROTA;
+                break;
+        }
+        this.setEstaAberto(false);
+
+    }
+
+    public boolean adicionaBookieASeguir(Bookie bookie) {
+        if (this.listaBookiesASeguir.contains(bookie)) {
+            return false;
+        }
+        this.listaBookiesASeguir.add(bookie);
+        return true;
+
+    }
+
+    public boolean removeBookieASeguir(Bookie bookie) {
+        return this.listaBookiesASeguir.remove(bookie);
+    }
+
+    public boolean bookieEstaASeguirEvento(Bookie bookie) {
+        return this.listaBookiesASeguir.contains(bookie);
+
+    }
+
 }

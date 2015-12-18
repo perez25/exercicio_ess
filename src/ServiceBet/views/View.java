@@ -5,7 +5,11 @@
  */
 package ServiceBet.views;
 
-import ServiceBet.models.Input;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -13,14 +17,21 @@ import ServiceBet.models.Input;
  */
 public class View {
 
+    /**
+     *
+     * @return String
+     */
     public String getString() {
-        Input in = new Input();
-        return in.lerString();
+        String res = null;
+        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+        try {
+            res = in.readLine();
+        } catch (IOException ex) {
+            Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return res;
     }
 
-    public double getDouble() {
-        Input in = new Input();
-        return in.readDouble();
-    }
+ 
 
 }

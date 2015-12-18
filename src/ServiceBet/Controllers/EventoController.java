@@ -5,21 +5,24 @@
  */
 package ServiceBet.Controllers;
 
+import ServiceBet.Observer.Subject;
 import ServiceBet.models.Aposta;
-import ServiceBet.models.Apostador;
+import ServiceBet.models.Bookie;
 import ServiceBet.models.Evento;
 import ServiceBet.models.Odd;
+import ServiceBet.views.ApostadorView;
+import ServiceBet.views.BookieView;
 import ServiceBet.views.EventoView;
 import java.time.Instant;
 import java.util.Date;
-import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 
 /**
  *
  * @author Perez_25
  */
-public class EventoController {
+public class EventoController extends Controller implements Subject {
 
     private EventoView view;
     private Evento evento;
@@ -27,6 +30,14 @@ public class EventoController {
     public EventoController(EventoView view, Evento evento) {
         this.view = view;
         this.evento = evento;
+    }
+
+    public void setEvento(Evento evento) {
+        this.evento = evento;
+    }
+
+    public void setView(EventoView view) {
+        this.view = view;
     }
 
     public String getEquipa1() {
@@ -58,99 +69,213 @@ public class EventoController {
     }
 
     public void setResultadoFinalDeEvento(char resultado) {
-      //  this.evento.fechaEvento(resultado);
+        this.fechaEvento(resultado);
     }
 
-    public String getResultadoFinalDeEvento() {
-        return this.evento.getResultadoFinal().toString();
+    public Evento.Resultado getResultadoFinalDeEvento() {
+        return this.evento.getResultadoFinal();
     }
 
     public void setDataDoEvento(Date data) {
         this.evento.setDataEvento(data);
     }
 
-    public void removeApostaDeEvento() {
+    public Date getDataDeEvento() {
+        return this.evento.getDataEvento();
     }
 
-    public void criaEvento() {
-
+    public Bookie getBookieDeEvento() {
+        return this.evento.getBookie();
     }
 
-    public boolean registaApostaDeEvento(HashMap<Integer, Evento> listaEventos, Apostador apostador) {
-        this.view.viewCriaEvento();
+    public boolean eventoEstaAberto() {
+        return this.evento.isEstaAberto();
+    }
+
+    public void removeApostaDeEvento(Evento evento, Aposta aposta) {
+        evento.getListaApostas().remove(aposta);
+    }
+
+    public Evento criaEvento(HashSet<Evento> listaEventos) {
+        int id = 0;
+        if (listaEventos.size() > 0) {
+            id = listaEventos.size() + 1;
+        }
+        this.view.viewCria();
         String readinput = this.view.getString();
-        String[] tokens = readinput.split(",");
+        String[] tokens = this.splitStringPorToken(readinput, ",");
         this.setEquipa2(tokens[1]);
         this.setEquipa1(tokens[0]);
         this.setDataDoEvento(Date.from(Instant.now()));
-        listaEventos.put(this.evento.getId(), this.evento);
+        this.adicionaObserver(this.evento.getBookie());
+        this.evento.setId(id);
+        listaEventos.add(this.evento);
+        return this.evento;
+    }
+
+    public boolean registaApostaDeEvento(Aposta aposta) {
+        if (this.evento.getListaApostas().containsKey(aposta.getId()) && this.eventoEstaAberto()) {
+
+            return false;
+        }
+        ApostaController apostaController = new ApostaController(aposta, null);
+        apostaController.setOddFixada(evento.getOdds());
+        evento.getListaApostas().put(aposta.getId(), aposta);
         return true;
     }
 
     public void listaEvento() {
-        this.view.mostraEvento(this.getEquipa1(), this.getEquipa2(), this.getResultadoFinalDeEvento(), null, null, null);
+        String estado = null;
+        if (this.evento.isEstaAberto() == false) {
+            estado = "Fechado";
+        } else {
+            estado = "Aberto";
+        }
+        this.view.mostraEvento(this.getEquipa1(), this.getEquipa2(), String.valueOf(this.getResultadoFinalDeEvento()), estado, this.getDataDeEvento().toString(), this.getOddDeEvento().toString());
     }
 
     public boolean actualizaEvento() {
+        this.view.viewAtualiza();
         String readinput = this.view.getString();
-        String[] tokens = readinput.split(",");
+        String[] tokens = this.splitStringPorToken(readinput, ",");
         this.setEquipa2(tokens[1]);
         this.setEquipa1(tokens[0]);
         this.setDataDoEvento(Date.from(Instant.now()));
+        this.view.viewAtualizaSucesso();
         return true;
     }
-    
-      public void notifyApostadores() {
-        int premio = 0;
-        if (!this.isOpen) {
-            Enumeration<Aposta> lista_apostas = this.listaApostas.elements();
-            while (lista_apostas.hasMoreElements()) {
-                Aposta aposta = lista_apostas.nextElement();
 
-                if (this.resultado_final == aposta.getResultado()) {
+    @Override
+    public void notificaApostadores() {
+        int premio = 0;
+
+        if (!this.evento.isEstaAberto()) {
+
+            for (Aposta aposta : this.evento.getListaApostas().values()) {
+
+                if (this.evento.getResultadoFinal() == aposta.getResultado()) {
 
                     switch (aposta.getResultado()) {
                         case VITORIA:
-                            premio = (int) (aposta.getMAposta() * aposta.getOddFixada().getOdd1());
+                            premio = aposta.calculaPremioDeOdd1();
                             break;
                         case EMPATE:
-                            premio = (int) (aposta.getMAposta() * aposta.getOddFixada().getOddx());
+                            premio = aposta.calculaPremioDeOdd2();
                             ;
                             break;
                         case DERROTA:
-                            premio = (int) (aposta.getMAposta() * aposta.getOddFixada().getOdd2());
+                            premio = aposta.calculaPremioDeOddx();
                             ;
                             break;
                     }
                 }
-                aposta.getApostador().update(premio + "");
+                ApostadorView apostadorView = new ApostadorView();
+                ApostadorController apostadorController = new ApostadorController(apostadorView, aposta.getApostador());
+                apostadorController.update("Ganhou o seguinte montante " + premio + " ");
+
             }
         }
     }
-    
-      public boolean fechaEvento(char resultadofinal) {
 
-        switch (resultadofinal) {
-            case '1':
-                this.resultado_final = Evento.Resultado.VITORIA;
-                break;
-            case 'x':
-                this.resultado_final = Evento.Resultado.EMPATE;
-                break;
-            case '2':
-                this.resultado_final = Evento.Resultado.DERROTA;
-                break;
+    public double calculaSaldoDeEvento() {
+        double saldo = 0;
+        for (Aposta aposta : this.evento.getListaApostas().values()) {
+
+            if (this.evento.getResultadoFinal() == aposta.getResultado()) {
+
+                switch (aposta.getResultado()) {
+                    case VITORIA:
+                        saldo -= aposta.calculaPremioDeOdd1();
+                        break;
+                    case EMPATE:
+                        saldo -= aposta.calculaPremioDeOddx();
+                        ;
+                        break;
+                    case DERROTA:
+                        saldo -= aposta.calculaPremioDeOdd2();
+                        ;
+                        break;
+                }
+            } else {
+                saldo += aposta.getMAposta();
+            }
         }
-        this.isOpen = false;
-        this.notifyApostadores();
+        return saldo;
+    }
+
+    public boolean fechaEvento(char resultadoFinal) {
+
+        if (resultadoFinal != 'x' && resultadoFinal != '1' && resultadoFinal != '2') {
+            this.view.viewFecharEventoErro();
+            return false;
+        }
+
+        if (!this.eventoEstaAberto()) {
+            this.view.viewActualizaOddEventoErro();
+            return false;
+        }
+
+        this.evento.defineResultadoFinal(resultadoFinal);
+        this.notificaApostadores();
+        this.notificaBookies();
+        this.view.viewFecharEventoSucesso();
         return true;
     }
-      
-        public void viewDeleteApostador() {
-        this.out.println("Remover Apostador" + this.viewEvento());
+
+    public boolean apaga(HashSet<Evento> listaEventos) {
+        for (Evento ev : listaEventos) {
+            if (ev.getId() == evento.getId()) {
+                listaEventos.remove(ev);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean actualizaOddsDeEvento(Evento evento, int odd1, int odd2, int oddx) {
+
+        if (evento.isEstaAberto() == true) {
+            this.view.viewActualizaOddEventoSucesso();
+            return evento.actualizaOdd(odd1, oddx, odd2);
+        } else {
+            this.view.viewActualizaOddEventoErro();
+            return false;
+        }
+    }
+
+    @Override
+    public void adicionaObserver(Bookie bookie) {
+        this.evento.adicionaBookieASeguir(bookie);
+    }
+
+    @Override
+    public void notificaBookies() {
+        BookieView bookieView = new BookieView();
+
+        BookieController bookieController = new BookieController(this.getBookieDeEvento(), bookieView);
+        bookieController.update("O evento que criou com o id = " + this.evento.getId() + " terminou com o resultado = " + String.valueOf(this.getResultadoFinalDeEvento()));
+        for (Bookie bookie : this.evento.getListaBookiesASeguir()) {
+            bookieController.setBookie(bookie);
+            bookieController.update("O evento que estava a seguir com o id = " + this.evento.getId() + " terminou com o resultado = " + String.valueOf(this.getResultadoFinalDeEvento()));
+        }
 
     }
-        
-        
+
+    public HashMap<Integer, Aposta> devolveApostasDeEvento() {
+        HashMap<Integer, Aposta> res = new HashMap<>();
+        for (Aposta aposta : this.evento.getListaApostas().values()) {
+            res.put(aposta.getId(), aposta.clone());
+        }
+        return res;
+    }
+
+    public boolean bookieEstaASeguir(Bookie bookie) {
+        return this.evento.bookieEstaASeguirEvento(bookie);
+    }
+
+    @Override
+    public void removeObserver(Bookie bookie) {
+        this.evento.removeBookieASeguir(bookie);
+    }
 
 }
