@@ -10,6 +10,8 @@ import ServiceBet.models.Apostador;
 import ServiceBet.models.Evento.Resultado;
 import ServiceBet.models.Odd;
 import ServiceBet.views.ApostaView;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -19,13 +21,14 @@ public class ApostaController extends Controller {
 
     private Aposta modelo;
     private ApostaView view;
-    
-    
+
     public ApostaController(Aposta modelo, ApostaView view) {
-        
         this.modelo = modelo;
         this.view = view;
-        
+    }
+
+    public void setId(int id) {
+        this.modelo.setId(id);
     }
 
     public void setApostador(Apostador apostador) {
@@ -56,33 +59,41 @@ public class ApostaController extends Controller {
         return this.modelo.getResultado();
     }
 
-    public void defineResultado(char resultado) {
-        this.modelo.defineResultado(resultado);
-    }
-
     public Aposta cria(Apostador apostador) {
         this.view.viewCria();
         String readinput = this.view.getString();
         String[] tokens = readinput.split(",");
-        this.modelo.aposta(Float.parseFloat(tokens[0]), tokens[1]);
+        this.modelo.defineMontanteEResultadoDeAposta(Float.parseFloat(tokens[0]), tokens[1]);
         this.setApostador(apostador);
+        apostador.removeBetEssCoins(Double.valueOf(tokens[0]));
         return this.modelo;
     }
 
-    public void actualiza() {
+    public boolean actualiza() {
         this.view.viewAtualiza();
         String readinput = this.view.getString();
         String[] tokens = this.splitStringPorToken(readinput, ",");
-        this.modelo.aposta(Float.parseFloat(tokens[0]), tokens[1]);
-
+        this.modelo.defineMontanteEResultadoDeAposta(Float.parseFloat(tokens[0]), tokens[1]);
+        this.view.viewAtualizaSucesso();
+        return true;
     }
 
     public void mostra() {
         this.view.viewMostra(String.valueOf(this.modelo.getResultado()), String.valueOf(this.modelo.getMAposta()));
     }
 
-    public boolean apaga() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public boolean apaga(HashMap<Integer, Aposta> listaApostas) {
+        this.view.viewApaga();
+        if (listaApostas.containsKey(this.modelo.getId())) {
+            this.view.viewApagaSucesso();
+            return listaApostas.remove(this.modelo.getId(), this.modelo);
+        }
+        this.view.viewApagaErro();
+        return false;
+    }
+
+    public int geraIdEvento(Map<Integer, Aposta> listaApostas) {
+        return listaApostas.size() + 1;
     }
 
 }

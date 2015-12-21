@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Evento.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;exercicio&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.source.html" class="el_package">ServiceBet.models</a> &gt; <span class="el_source">Evento.java</span></div><h1>Evento.java</h1><pre class="source lang-java linenums">package ServiceBet.models;
+
+import java.util.*;
+
+public class Evento {
+
+<span class="nc" id="L7">    public enum Resultado {</span>
+
+<span class="nc" id="L9">        VITORIA, DERROTA, EMPATE</span>
+    }
+
+    private int id;
+    private String equipa1;
+    private String equipa2;
+    private Resultado resultadoFinal;
+    private Date dataEvento;
+    private Bookie bookie;
+    private Map&lt;Integer, Aposta&gt; listaApostas;
+    private boolean estaAberto;
+    private Odd odds;
+    private Set&lt;Bookie&gt; listaBookiesASeguir;
+
+<span class="nc" id="L23">    public Evento(String equipa1, String equipa2, Date data, Bookie bookie) {</span>
+<span class="nc" id="L24">        this.equipa1 = equipa1;</span>
+<span class="nc" id="L25">        this.equipa2 = equipa2;</span>
+<span class="nc" id="L26">        this.estaAberto = true;</span>
+<span class="nc" id="L27">        this.resultadoFinal = null;</span>
+<span class="nc" id="L28">        this.dataEvento = data;</span>
+<span class="nc" id="L29">        this.id = 0;</span>
+<span class="nc" id="L30">        this.odds = new Odd();</span>
+<span class="nc" id="L31">        this.listaApostas = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L32">        this.bookie = bookie;</span>
+<span class="nc" id="L33">        this.listaBookiesASeguir = new HashSet&lt;&gt;();</span>
+<span class="nc" id="L34">    }</span>
+
+<span class="nc" id="L36">    public Evento(Bookie bookie) {</span>
+<span class="nc" id="L37">        this.equipa1 = &quot;&quot;;</span>
+<span class="nc" id="L38">        this.equipa2 = &quot;&quot;;</span>
+<span class="nc" id="L39">        this.estaAberto = true;</span>
+<span class="nc" id="L40">        this.resultadoFinal = null;</span>
+<span class="nc" id="L41">        this.dataEvento = null;</span>
+<span class="nc" id="L42">        this.id = 0;</span>
+<span class="nc" id="L43">        this.odds = new Odd();</span>
+<span class="nc" id="L44">        this.listaApostas = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L45">        this.bookie = bookie;</span>
+<span class="nc" id="L46">        this.listaBookiesASeguir = new HashSet&lt;&gt;();</span>
+<span class="nc" id="L47">    }</span>
+
+    public int getId() {
+<span class="nc" id="L50">        return id;</span>
+    }
+
+    public void setId(int id) {
+<span class="nc" id="L54">        this.id = id;</span>
+<span class="nc" id="L55">    }</span>
+
+    public String getEquipa1() {
+<span class="nc" id="L58">        return equipa1;</span>
+    }
+
+    public void setEquipa1(String equipa1) {
+<span class="nc" id="L62">        this.equipa1 = equipa1;</span>
+<span class="nc" id="L63">    }</span>
+
+    public String getEquipa2() {
+<span class="nc" id="L66">        return equipa2;</span>
+    }
+
+    public void setEquipa2(String equipa2) {
+<span class="nc" id="L70">        this.equipa2 = equipa2;</span>
+<span class="nc" id="L71">    }</span>
+
+    public Resultado getResultadoFinal() {
+<span class="nc" id="L74">        return this.resultadoFinal;</span>
+
+    }
+
+    public void setResultadoFinal(Resultado resultadoFinal) {
+<span class="nc" id="L79">        this.resultadoFinal = resultadoFinal;</span>
+<span class="nc" id="L80">    }</span>
+
+    public Date getDataEvento() {
+<span class="nc" id="L83">        return dataEvento;</span>
+    }
+
+    public void setDataEvento(Date dataEvento) {
+<span class="nc" id="L87">        this.dataEvento = dataEvento;</span>
+<span class="nc" id="L88">    }</span>
+
+    public Map&lt;Integer, Aposta&gt; getListaApostas() {
+<span class="nc" id="L91">        return listaApostas;</span>
+    }
+
+    public void setListaApostas(HashMap&lt;Integer, Aposta&gt; listaApostas) {
+<span class="nc" id="L95">        this.listaApostas = listaApostas;</span>
+<span class="nc" id="L96">    }</span>
+
+    public Odd getOdds() {
+<span class="nc" id="L99">        return odds;</span>
+    }
+
+    public void setOdds(Odd odds) {
+<span class="nc" id="L103">        this.odds = odds;</span>
+<span class="nc" id="L104">    }</span>
+
+    /**
+     * @return the estaAberto
+     */
+    public boolean isEstaAberto() {
+<span class="nc" id="L110">        return estaAberto;</span>
+    }
+
+    /**
+     * @param estaAberto the estaAberto to set
+     */
+    public void setEstaAberto(boolean estaAberto) {
+<span class="nc" id="L117">        this.estaAberto = estaAberto;</span>
+<span class="nc" id="L118">    }</span>
+
+    /**
+     * @return the bookie
+     */
+    public Bookie getBookie() {
+<span class="nc" id="L124">        return bookie;</span>
+    }
+
+    /**
+     * @param bookie the bookie to set
+     */
+    public void setBookie(Bookie bookie) {
+<span class="nc" id="L131">        this.bookie = bookie;</span>
+<span class="nc" id="L132">    }</span>
+
+    public Set&lt;Bookie&gt; getListaBookiesASeguir() {
+<span class="nc" id="L135">        return listaBookiesASeguir;</span>
+    }
+
+    public void setListaBookiesASeguir(Set&lt;Bookie&gt; listaBookiesASeguir) {
+<span class="nc" id="L139">        this.listaBookiesASeguir = listaBookiesASeguir;</span>
+<span class="nc" id="L140">    }</span>
+
+    public void adicionaAposta(Aposta aposta) {
+<span class="nc" id="L143">        this.listaApostas.put(aposta.getId(), aposta);</span>
+<span class="nc" id="L144">    }</span>
+
+    public void removeAposta(Aposta aposta) {
+<span class="nc" id="L147">        this.listaApostas.remove(aposta.getId());</span>
+
+<span class="nc" id="L149">    }</span>
+
+    public boolean actualizaOdd(int odd1, int oddx, int odd2) {
+<span class="nc" id="L152">        this.odds.actualiza(odd1, oddx, odd2);</span>
+<span class="nc" id="L153">        return true;</span>
+    }
+
+    public void defineResultadoFinal(char resultadoFinal) {
+<span class="nc bnc" id="L157" title="All 4 branches missed.">        switch (resultadoFinal) {</span>
+            case '1':
+<span class="nc" id="L159">                this.resultadoFinal = Evento.Resultado.VITORIA;</span>
+<span class="nc" id="L160">                break;</span>
+            case 'x':
+<span class="nc" id="L162">                this.resultadoFinal = Evento.Resultado.EMPATE;</span>
+<span class="nc" id="L163">                break;</span>
+            case '2':
+<span class="nc" id="L165">                this.resultadoFinal = Evento.Resultado.DERROTA;</span>
+                break;
+        }
+<span class="nc" id="L168">        this.setEstaAberto(false);</span>
+
+<span class="nc" id="L170">    }</span>
+
+    public boolean adicionaBookieASeguir(Bookie bookie) {
+<span class="nc bnc" id="L173" title="All 2 branches missed.">        if (this.listaBookiesASeguir.contains(bookie)) {</span>
+<span class="nc" id="L174">            return false;</span>
+        }
+<span class="nc" id="L176">        this.listaBookiesASeguir.add(bookie);</span>
+<span class="nc" id="L177">        return true;</span>
+
+    }
+
+    public boolean removeBookieASeguir(Bookie bookie) {
+<span class="nc" id="L182">        return this.listaBookiesASeguir.remove(bookie);</span>
+    }
+
+    public boolean bookieEstaASeguirEvento(Bookie bookie) {
+<span class="nc" id="L186">        return this.listaBookiesASeguir.contains(bookie);</span>
+
+    }
+
+    public double calculaSaldoDeEvento() {
+<span class="nc" id="L191">        double saldo = 0;</span>
+<span class="nc bnc" id="L192" title="All 2 branches missed.">        for (Aposta aposta : this.getListaApostas().values()) {</span>
+
+<span class="nc bnc" id="L194" title="All 2 branches missed.">            if (this.getResultadoFinal() == aposta.getResultado()) {</span>
+<span class="nc" id="L195">                saldo -= aposta.devolvePremio();</span>
+
+            } else {
+<span class="nc" id="L198">                saldo += aposta.getMAposta();</span>
+            }
+<span class="nc" id="L200">        }</span>
+<span class="nc" id="L201">        return saldo;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>

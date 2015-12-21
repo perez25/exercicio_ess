@@ -13,21 +13,23 @@ public class ApostaView extends View implements MetodosView {
 
     @Override
     public void viewCria() {
+           System.out.println("Criar aposta !");
         System.out.println("Introduza o resultado e o montante a apostar: montante, resultado\n");
     }
 
     @Override
     public void viewAtualiza() {
+        System.out.println("Atualizar aposta !");
         System.out.println("Introduza o resultado e o montante a apostar: montante, resultado\n");
     }
 
     public void viewMostra(String aposta, String montante) {
-        System.out.println("Apostou no resultado" + aposta + " o montante :" + montante);
+        System.out.println("Apostou no resultado = " + aposta + " o montante =" + montante);
     }
 
     @Override
     public void viewApaga() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+       System.out.println("Remover aposta !");
     }
 
     @Override
@@ -42,12 +44,12 @@ public class ApostaView extends View implements MetodosView {
 
     @Override
     public void viewApagaErro() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        System.out.println("Erro ao remover aposta !");
     }
 
     @Override
     public void viewApagaSucesso() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        System.out.println("Aposta removida com sucesso !");
     }
 
     @Override

@@ -53,11 +53,15 @@ public class ApostadorController extends Controller implements Observer {
     }
 
     public void adicionaBetEssCoinsAoSaldoDeApostador(double montante) {
-        this.setBetEssCoins(this.getBetEssCoinsDeApostador() + montante);
+        this.modelo.adicionaBetEssCoins(montante);
     }
 
-    public boolean verificaSeExisteApostador(String email, HashMap<String, Apostador> listaApostadores) {
-        return listaApostadores.containsKey(email);
+    public void removeBetEssCoinsAoSaldoDeApostadoe(double montante) {
+      this.modelo.removeBetEssCoins(montante);
+    }
+
+    public boolean verificaSeExisteApostador(HashMap<String, Apostador> listaApostadores) {
+        return listaApostadores.containsKey(this.modelo.getEmail());
     }
 
     public Apostador cria(HashMap<String, Apostador> listaApostadores) {
@@ -70,7 +74,7 @@ public class ApostadorController extends Controller implements Observer {
         this.setEmailDeApostador(tokens[1]);
         this.setBetEssCoins(Double.parseDouble(tokens[2]));
 
-        if (!verificaSeExisteApostador(tokens[1], listaApostadores)) {
+        if (!verificaSeExisteApostador(listaApostadores)) {
             listaApostadores.put(tokens[1], this.modelo);
             this.view.viewCriaSucesso();
             return this.modelo;
@@ -79,8 +83,8 @@ public class ApostadorController extends Controller implements Observer {
         return null;
     }
 
-    public boolean atualiza() {
-
+    public boolean atualiza(HashMap<String,Apostador> listaApostadores) {
+        if(listaApostadores.containsKey(this.getEmailDeApostador())){
         this.view.viewAtualiza();
         String readinput = this.view.getString();
         String[] tokens = this.splitStringPorToken(readinput, ",");
@@ -88,16 +92,18 @@ public class ApostadorController extends Controller implements Observer {
         this.setEmailDeApostador(tokens[1]);
         this.setBetEssCoins(Double.parseDouble(tokens[2]));
         return true;
+        }
+        return false;
     }
 
     public void lista() {
         this.view.viewMostra(this.getNomeDeApostador(), this.getEmailDeApostador(), (float) this.getBetEssCoinsDeApostador());
     }
 
-    public boolean apaga(String email, HashMap<String, Apostador> listaApostadores) {
+    public boolean apaga(HashMap<String, Apostador> listaApostadores) {
         for (Apostador apostador : listaApostadores.values()) {
-            if (apostador.getEmail().equals(email)) {
-                listaApostadores.remove(email);
+            if (apostador.getEmail().equals(this.modelo.getEmail())) {
+                listaApostadores.remove(this.modelo.getEmail());
                 this.view.viewApagaSucesso();
                 return true;
             }

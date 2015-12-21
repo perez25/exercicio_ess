@@ -42,7 +42,7 @@ public class EventoView extends View implements MetodosView {
     }
 
     public void viewFecharEventoErro() {
-        System.out.println("Resultado inserido não existe !");
+        System.out.println("Erro ao fechar evento !");
     }
 
     public void viewFecharEventoSucesso() {

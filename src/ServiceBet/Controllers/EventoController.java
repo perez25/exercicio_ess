@@ -10,12 +10,13 @@ import ServiceBet.models.Aposta;
 import ServiceBet.models.Bookie;
 import ServiceBet.models.Evento;
 import ServiceBet.models.Odd;
+import ServiceBet.views.ApostaView;
 import ServiceBet.views.ApostadorView;
 import ServiceBet.views.BookieView;
 import ServiceBet.views.EventoView;
+import ServiceBet.views.OddView;
 import java.time.Instant;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 
 /**
@@ -92,15 +93,16 @@ public class EventoController extends Controller implements Subject {
         return this.evento.isEstaAberto();
     }
 
-    public void removeApostaDeEvento(Evento evento, Aposta aposta) {
+    public void removeApostaDeEvento(Aposta aposta) {
         evento.getListaApostas().remove(aposta);
     }
 
+    public int geraIdEvento(HashSet<Evento> listaEventos) {
+        return listaEventos.size() + 1;
+    }
+
     public Evento criaEvento(HashSet<Evento> listaEventos) {
-        int id = 0;
-        if (listaEventos.size() > 0) {
-            id = listaEventos.size() + 1;
-        }
+
         this.view.viewCria();
         String readinput = this.view.getString();
         String[] tokens = this.splitStringPorToken(readinput, ",");
@@ -108,20 +110,27 @@ public class EventoController extends Controller implements Subject {
         this.setEquipa1(tokens[0]);
         this.setDataDoEvento(Date.from(Instant.now()));
         this.adicionaObserver(this.evento.getBookie());
-        this.evento.setId(id);
+        this.evento.setId(geraIdEvento(listaEventos));
         listaEventos.add(this.evento);
         return this.evento;
     }
 
     public boolean registaApostaDeEvento(Aposta aposta) {
-        if (this.evento.getListaApostas().containsKey(aposta.getId()) && this.eventoEstaAberto()) {
-
+        ApostaView apostaView = new ApostaView();
+        if (this.evento.getListaApostas().containsKey(aposta.getId()) || !this.eventoEstaAberto()) {
+            apostaView.viewCriaErro();
             return false;
         }
-        ApostaController apostaController = new ApostaController(aposta, null);
+        ApostaController apostaController = new ApostaController(aposta, apostaView);
         apostaController.setOddFixada(evento.getOdds());
+        apostaController.setId(apostaController.geraIdEvento(this.evento.getListaApostas()));
         evento.getListaApostas().put(aposta.getId(), aposta);
+        apostaView.viewCriaSucesso();
         return true;
+    }
+
+    public boolean verificaSeEventoExisteNoSistema(HashSet<Evento> listaEventos) {
+        return listaEventos.contains(this.evento);
     }
 
     public void listaEvento() {
@@ -147,60 +156,26 @@ public class EventoController extends Controller implements Subject {
 
     @Override
     public void notificaApostadores() {
-        int premio = 0;
+        int premio;
 
         if (!this.evento.isEstaAberto()) {
-
             for (Aposta aposta : this.evento.getListaApostas().values()) {
-
                 if (this.evento.getResultadoFinal() == aposta.getResultado()) {
-
-                    switch (aposta.getResultado()) {
-                        case VITORIA:
-                            premio = aposta.calculaPremioDeOdd1();
-                            break;
-                        case EMPATE:
-                            premio = aposta.calculaPremioDeOdd2();
-                            ;
-                            break;
-                        case DERROTA:
-                            premio = aposta.calculaPremioDeOddx();
-                            ;
-                            break;
-                    }
+                    premio = aposta.devolvePremio();
+                } else {
+                    premio = 0;
                 }
                 ApostadorView apostadorView = new ApostadorView();
                 ApostadorController apostadorController = new ApostadorController(apostadorView, aposta.getApostador());
                 apostadorController.update("Ganhou o seguinte montante " + premio + " ");
+                apostadorController.adicionaBetEssCoinsAoSaldoDeApostador(premio);
 
             }
         }
     }
 
     public double calculaSaldoDeEvento() {
-        double saldo = 0;
-        for (Aposta aposta : this.evento.getListaApostas().values()) {
-
-            if (this.evento.getResultadoFinal() == aposta.getResultado()) {
-
-                switch (aposta.getResultado()) {
-                    case VITORIA:
-                        saldo -= aposta.calculaPremioDeOdd1();
-                        break;
-                    case EMPATE:
-                        saldo -= aposta.calculaPremioDeOddx();
-                        ;
-                        break;
-                    case DERROTA:
-                        saldo -= aposta.calculaPremioDeOdd2();
-                        ;
-                        break;
-                }
-            } else {
-                saldo += aposta.getMAposta();
-            }
-        }
-        return saldo;
+        return this.evento.calculaSaldoDeEvento();
     }
 
     public boolean fechaEvento(char resultadoFinal) {
@@ -211,7 +186,7 @@ public class EventoController extends Controller implements Subject {
         }
 
         if (!this.eventoEstaAberto()) {
-            this.view.viewActualizaOddEventoErro();
+            this.view.viewFecharEventoErro();
             return false;
         }
 
@@ -232,13 +207,15 @@ public class EventoController extends Controller implements Subject {
         return false;
     }
 
-    public boolean actualizaOddsDeEvento(Evento evento, int odd1, int odd2, int oddx) {
+    public boolean actualizaOddsDeEvento(int odd1, int odd2, int oddx) {
+        OddView oddView = new OddView();
+        if (evento.isEstaAberto()) {
 
-        if (evento.isEstaAberto() == true) {
-            this.view.viewActualizaOddEventoSucesso();
-            return evento.actualizaOdd(odd1, oddx, odd2);
+            OddController oddController = new OddController(this.getOddDeEvento(), oddView);
+            oddController.atualiza(odd1, oddx, odd2);
+            return true;
         } else {
-            this.view.viewActualizaOddEventoErro();
+            oddView.viewAtualizaErro();
             return false;
         }
     }
@@ -259,14 +236,6 @@ public class EventoController extends Controller implements Subject {
             bookieController.update("O evento que estava a seguir com o id = " + this.evento.getId() + " terminou com o resultado = " + String.valueOf(this.getResultadoFinalDeEvento()));
         }
 
-    }
-
-    public HashMap<Integer, Aposta> devolveApostasDeEvento() {
-        HashMap<Integer, Aposta> res = new HashMap<>();
-        for (Aposta aposta : this.evento.getListaApostas().values()) {
-            res.put(aposta.getId(), aposta.clone());
-        }
-        return res;
     }
 
     public boolean bookieEstaASeguir(Bookie bookie) {

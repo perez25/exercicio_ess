@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>BetESSAPI.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;exercicio&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.source.html" class="el_package">ServiceBet.Facade</a> &gt; <span class="el_source">BetESSAPI.java</span></div><h1>BetESSAPI.java</h1><pre class="source lang-java linenums">package ServiceBet.Facade;
+
+import ServiceBet.Controllers.ApostaController;
+import ServiceBet.Controllers.ApostadorController;
+import ServiceBet.Controllers.BookieController;
+import ServiceBet.Controllers.EventoController;
+import ServiceBet.models.Aposta;
+import ServiceBet.models.Apostador;
+import ServiceBet.models.Bookie;
+import ServiceBet.models.Evento;
+import ServiceBet.views.ApostaView;
+import ServiceBet.views.ApostadorView;
+import ServiceBet.views.BetEssAPIView;
+import ServiceBet.views.BookieView;
+import ServiceBet.views.EventoView;
+import java.util.*;
+
+public class BetESSAPI {
+
+    private HashSet&lt;Evento&gt; listaEventos;
+    private HashMap&lt;String, Apostador&gt; listaApostadores;
+    private HashMap&lt;String, Bookie&gt; listaBookies;
+    private double betESStotal;
+    private String nome;
+
+<span class="fc" id="L26">    public BetESSAPI() {</span>
+<span class="fc" id="L27">        this.betESStotal = 0;</span>
+<span class="fc" id="L28">        this.listaEventos = new HashSet&lt;&gt;();</span>
+<span class="fc" id="L29">        this.listaApostadores = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L30">        this.listaBookies = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L31">        this.nome = &quot;BetESSAPI&quot;;</span>
+<span class="fc" id="L32">    }</span>
+
+    public void actualizaBetEssTotal(double montante) {
+<span class="nc" id="L35">        this.betESStotal = this.betESStotal + montante;</span>
+<span class="nc" id="L36">    }</span>
+
+    public void actualizaNomeDeBetEssAPI(String nome) {
+<span class="nc" id="L39">        this.nome = nome;</span>
+<span class="nc" id="L40">    }</span>
+
+    public double devolveSaldoTotal() {
+<span class="nc" id="L43">        return betESStotal;</span>
+    }
+
+    public void mostraBetEssService() {
+<span class="nc" id="L47">        BetEssAPIView betView = new BetEssAPIView();</span>
+<span class="nc" id="L48">        betView.viewMostra(this.nome, String.valueOf(this.betESStotal), String.valueOf(getNumeroDeApostadores()), String.valueOf(getNumeroDeEventos()), String.valueOf(getNumBookiesSistema()));</span>
+<span class="nc" id="L49">    }</span>
+
+    public Aposta registaAposta(Apostador apostador, Evento evento) {
+<span class="nc" id="L52">        EventoView viewEvento = new EventoView();</span>
+<span class="nc" id="L53">        EventoController eventoController = new EventoController(viewEvento, evento);</span>
+
+<span class="nc bnc" id="L55" title="All 2 branches missed.">        if (eventoController.verificaSeEventoExisteNoSistema(this.listaEventos)) {</span>
+
+<span class="nc" id="L57">            ApostaView viewAposta = new ApostaView();</span>
+<span class="nc" id="L58">            ApostaController apostaController = new ApostaController(new Aposta(), viewAposta);</span>
+<span class="nc" id="L59">            Aposta aposta = apostaController.cria(apostador);</span>
+
+<span class="nc bnc" id="L61" title="All 2 branches missed.">            if (eventoController.registaApostaDeEvento(aposta)) {</span>
+<span class="nc" id="L62">                return aposta;</span>
+            }
+        }
+<span class="nc" id="L65">        return null;</span>
+    }
+
+    public boolean actualizaAposta(Aposta aposta) {
+<span class="nc" id="L69">        ApostaView viewAposta = new ApostaView();</span>
+<span class="nc" id="L70">        ApostaController apostaController = new ApostaController(aposta, viewAposta);</span>
+<span class="nc" id="L71">        return apostaController.actualiza();</span>
+    }
+
+    public void mostraAposta(Aposta aposta) {
+<span class="nc" id="L75">        ApostaView viewAposta = new ApostaView();</span>
+<span class="nc" id="L76">        ApostaController apostaController = new ApostaController(aposta, viewAposta);</span>
+<span class="nc" id="L77">        apostaController.mostra();</span>
+<span class="nc" id="L78">    }</span>
+
+    public boolean actualizaOdd(Evento evento, int odd_1, int odd_x, int odd_2) {
+<span class="nc" id="L81">        EventoView view = new EventoView();</span>
+<span class="nc" id="L82">        EventoController eventoController = new EventoController(view, evento);</span>
+<span class="nc" id="L83">        return eventoController.actualizaOddsDeEvento(odd_1, odd_2, odd_x);</span>
+    }
+
+    public Evento registaEvento(Bookie bookie) {
+<span class="nc" id="L87">        EventoView view = new EventoView();</span>
+<span class="nc" id="L88">        EventoController eventoController = new EventoController(view, new Evento(bookie));</span>
+<span class="nc" id="L89">        return eventoController.criaEvento(listaEventos);</span>
+    }
+
+    public boolean fechaEvento(Evento evento, char resultado) {
+<span class="nc" id="L93">        EventoView view = new EventoView();</span>
+<span class="nc" id="L94">        EventoController eventoController = new EventoController(view, evento);</span>
+<span class="nc" id="L95">        boolean res = eventoController.fechaEvento(resultado);</span>
+<span class="nc" id="L96">        this.actualizaBetEssTotal(eventoController.calculaSaldoDeEvento());</span>
+<span class="nc" id="L97">        return res;</span>
+    }
+
+    public void listarEventos() {
+<span class="nc" id="L101">        EventoView view = new EventoView();</span>
+<span class="nc" id="L102">        EventoController eventoController = new EventoController(view, null);</span>
+<span class="nc bnc" id="L103" title="All 2 branches missed.">        for (Evento evento : this.listaEventos) {</span>
+<span class="nc" id="L104">            eventoController.setEvento(evento);</span>
+<span class="nc" id="L105">            eventoController.listaEvento();</span>
+<span class="nc" id="L106">        }</span>
+<span class="nc" id="L107">    }</span>
+
+    public boolean apagaEvento(Evento evento) {
+<span class="nc" id="L110">        EventoView view = new EventoView();</span>
+<span class="nc" id="L111">        EventoController eventoController = new EventoController(view, evento);</span>
+<span class="nc" id="L112">        return eventoController.apaga(listaEventos);</span>
+    }
+
+    public int getNumeroDeEventos() {
+<span class="nc" id="L116">        return this.listaEventos.size();</span>
+    }
+
+    public int getNumeroDeApostadores() {
+<span class="nc" id="L120">        return this.listaApostadores.size();</span>
+    }
+
+    public void listarApostadores() {
+<span class="nc" id="L124">        ApostadorView viewApostador = new ApostadorView();</span>
+<span class="nc bnc" id="L125" title="All 2 branches missed.">        for (Apostador apostador : this.listaApostadores.values()) {</span>
+<span class="nc" id="L126">            ApostadorController apostadorController = new ApostadorController(viewApostador, apostador);</span>
+<span class="nc" id="L127">            apostadorController.lista();</span>
+<span class="nc" id="L128">        }</span>
+<span class="nc" id="L129">    }</span>
+
+    public Apostador registaApostador() {
+<span class="nc" id="L132">        ApostadorView viewApostador = new ApostadorView();</span>
+<span class="nc" id="L133">        ApostadorController apostadorController = new ApostadorController(viewApostador, new Apostador());</span>
+<span class="nc" id="L134">        return apostadorController.cria(listaApostadores);</span>
+    }
+
+    public boolean actualizaApostador(Apostador apostador) {
+<span class="nc" id="L138">        ApostadorView viewApostador = new ApostadorView();</span>
+<span class="nc" id="L139">        ApostadorController apostadorController = new ApostadorController(viewApostador, apostador);</span>
+<span class="nc" id="L140">        return apostadorController.atualiza(this.listaApostadores);</span>
+    }
+
+    public boolean apagaApostador(Apostador apostadorl) {
+<span class="nc" id="L144">        ApostadorView viewApostador = new ApostadorView();</span>
+<span class="nc" id="L145">        ApostadorController apostadorController = new ApostadorController(viewApostador, apostadorl);</span>
+<span class="nc" id="L146">        return apostadorController.apaga(listaApostadores);</span>
+    }
+
+    public Bookie criaBookie() {
+<span class="fc" id="L150">        BookieView view = new BookieView();</span>
+<span class="fc" id="L151">        BookieController bookieController = new BookieController(new Bookie(), view);</span>
+<span class="nc" id="L152">        return bookieController.adicionaBookie(listaBookies);</span>
+    }
+
+    public void mostraBookie(Bookie bookie) {
+<span class="nc" id="L156">        BookieView view = new BookieView();</span>
+<span class="nc" id="L157">        BookieController bookieController = new BookieController(new Bookie(), view);</span>
+<span class="nc" id="L158">        bookieController.mostraBookie();</span>
+<span class="nc" id="L159">    }</span>
+
+    public void listaBookies() {
+<span class="nc" id="L162">        BookieView view = new BookieView();</span>
+<span class="nc" id="L163">        BookieController bookieController = new BookieController(null, view);</span>
+<span class="nc bnc" id="L164" title="All 2 branches missed.">        for (Bookie bookie : this.listaBookies.values()) {</span>
+<span class="nc" id="L165">            bookieController.setBookie(bookie);</span>
+<span class="nc" id="L166">            bookieController.mostraBookie();</span>
+<span class="nc" id="L167">        }</span>
+<span class="nc" id="L168">    }</span>
+
+    public boolean apagaBookie(Bookie bookie) {
+<span class="nc" id="L171">        BookieView view = new BookieView();</span>
+<span class="nc" id="L172">        BookieController bookieController = new BookieController(bookie, view);</span>
+<span class="nc" id="L173">        return bookieController.apagaBookie(listaBookies);</span>
+    }
+
+    public boolean actualizaBookie(Bookie bookie) {
+<span class="nc" id="L177">        BookieView view = new BookieView();</span>
+<span class="nc" id="L178">        BookieController bookieController = new BookieController(bookie, view);</span>
+<span class="nc" id="L179">        return bookieController.actualizaBookie(listaBookies);</span>
+    }
+
+    public int getNumBookiesSistema() {
+<span class="nc" id="L183">        return this.listaBookies.size();</span>
+    }
+
+    public void addBookieASeguirEv(Evento evento, Bookie bookie) {
+<span class="nc" id="L187">        EventoView view = new EventoView();</span>
+<span class="nc" id="L188">        EventoController eventoController = new EventoController(view, evento);</span>
+<span class="nc" id="L189">        eventoController.adicionaObserver(bookie);</span>
+<span class="nc" id="L190">    }</span>
+
+    public void rmBookieASeguirEv(Evento evento, Bookie bookie) {
+<span class="nc" id="L193">        EventoView view = new EventoView();</span>
+<span class="nc" id="L194">        EventoController eventoController = new EventoController(view, evento);</span>
+<span class="nc" id="L195">        eventoController.removeObserver(bookie);</span>
+<span class="nc" id="L196">    }</span>
+
+    public boolean bookieASeguirEv(Evento evento, Bookie bookie) {
+<span class="nc" id="L199">        EventoController eventoController = new EventoController(null, evento);</span>
+<span class="nc" id="L200">        return eventoController.bookieEstaASeguir(bookie);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>

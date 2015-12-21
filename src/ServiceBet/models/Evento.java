@@ -103,30 +103,18 @@ public class Evento {
         this.odds = odds;
     }
 
-    /**
-     * @return the estaAberto
-     */
     public boolean isEstaAberto() {
         return estaAberto;
     }
 
-    /**
-     * @param estaAberto the estaAberto to set
-     */
     public void setEstaAberto(boolean estaAberto) {
         this.estaAberto = estaAberto;
     }
 
-    /**
-     * @return the bookie
-     */
     public Bookie getBookie() {
         return bookie;
     }
 
-    /**
-     * @param bookie the bookie to set
-     */
     public void setBookie(Bookie bookie) {
         this.bookie = bookie;
     }
@@ -149,9 +137,7 @@ public class Evento {
     }
 
     public boolean actualizaOdd(int odd1, int oddx, int odd2) {
-        this.odds.setOddx(oddx);
-        this.odds.setOdd1(odd1);
-        this.odds.setOdd2(odd2);
+        this.odds.actualiza(odd1, oddx, odd2);
         return true;
     }
 
@@ -187,6 +173,20 @@ public class Evento {
     public boolean bookieEstaASeguirEvento(Bookie bookie) {
         return this.listaBookiesASeguir.contains(bookie);
 
+    }
+
+    public double calculaSaldoDeEvento() {
+        double saldo = 0;
+        for (Aposta aposta : this.getListaApostas().values()) {
+
+            if (this.getResultadoFinal() == aposta.getResultado()) {
+                saldo -= aposta.devolvePremio();
+
+            } else {
+                saldo += aposta.getMAposta();
+            }
+        }
+        return saldo;
     }
 
 }

@@ -42,6 +42,12 @@ public class Odd {
         this.odd2 = odd2;
     }
 
+    public void actualiza(float odd1, float oddx, float odd2) {
+        this.setOddx(oddx);
+        this.setOdd1(odd1);
+        this.setOdd2(odd2);
+    }
+
     @Override
     public Odd clone() {
         Odd newOdd = new Odd();

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>EventoView.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;exercicio&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.source.html" class="el_package">ServiceBet.views</a> &gt; <span class="el_source">EventoView.java</span></div><h1>EventoView.java</h1><pre class="source lang-java linenums">/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package ServiceBet.views;
+
+/**
+ *
+ * @author Perez_25
+ */
+<span class="nc" id="L12">public class EventoView extends View implements MetodosView {</span>
+
+    @Override
+    public void viewCria() {
+<span class="nc" id="L16">        System.out.println(&quot;Criar Evento&quot;);</span>
+<span class="nc" id="L17">        System.out.println(&quot;Introduza as equipas participantes no evento: (Equipa1, Equipa2, DataEvento)&quot;);</span>
+
+<span class="nc" id="L19">    }</span>
+
+    @Override
+    public void viewAtualiza() {
+<span class="nc" id="L23">        System.out.println(&quot;Atualizar Evento&quot;);</span>
+<span class="nc" id="L24">        System.out.println(&quot;Introduza as equipas participantes no evento: (Equipa1, Equipa2, DataEvento)&quot;);</span>
+<span class="nc" id="L25">    }</span>
+
+    public void viewActualizaOddEvento() {
+<span class="nc" id="L28">        System.out.println(&quot;Introduza as novas odds (od1,odx,od2)&quot;);</span>
+<span class="nc" id="L29">    }</span>
+
+    public void viewActualizaOddEventoSucesso() {
+<span class="nc" id="L32">        System.out.println(&quot;Odd actualizada com Sucesso !&quot;);</span>
+<span class="nc" id="L33">    }</span>
+
+    public void viewActualizaOddEventoErro() {
+<span class="nc" id="L36">        System.out.println(&quot;Evento já se encontra fechado !&quot;);</span>
+<span class="nc" id="L37">    }</span>
+
+    @Override
+    public void viewApagaErro() {
+<span class="nc" id="L41">        System.out.println(&quot;Erro ao apagar evento!&quot;);</span>
+<span class="nc" id="L42">    }</span>
+
+    public void viewFecharEventoErro() {
+<span class="nc" id="L45">        System.out.println(&quot;Resultado inserido não existe !&quot;);</span>
+<span class="nc" id="L46">    }</span>
+
+    public void viewFecharEventoSucesso() {
+<span class="nc" id="L49">        System.out.println(&quot;Resultado inserido com sucesso !&quot;);</span>
+<span class="nc" id="L50">    }</span>
+
+    public void mostraEvento(String equipa1, String equipa2, String resultado_final, String estadoJogo, String data, String odd) {
+<span class="nc" id="L53">        System.out.print(&quot;\n&quot; + &quot;Evento{&quot;</span>
+                + &quot;equipa1 : '&quot; + equipa1 + '\''
+                + &quot;, equipa2 : '&quot; + equipa2 + '\''
+                + &quot;, resultado_final : &quot; + resultado_final
+                + &quot;, estado = &quot; + estadoJogo
+                + &quot;, data da aposta : &quot; + data
+                + &quot;, ultima odd :&quot; + odd
+                + '}' + &quot;\n&quot;);
+
+<span class="nc" id="L62">    }</span>
+
+    @Override
+    public void viewApaga() {
+<span class="nc" id="L66">        System.out.println(&quot;Apagar evento!&quot;);</span>
+<span class="nc" id="L67">    }</span>
+
+    @Override
+    public void viewCriaSucesso() {
+<span class="nc" id="L71">        System.out.println(&quot;Evento criado com sucesso !&quot;);</span>
+<span class="nc" id="L72">    }</span>
+
+    @Override
+    public void viewCriaErro() {
+<span class="nc" id="L76">        System.out.println(&quot;Erro ao criar evento !&quot;);</span>
+<span class="nc" id="L77">    }</span>
+
+    @Override
+    public void viewApagaSucesso() {
+<span class="nc" id="L81">        System.out.println(&quot;Evento apagado com sucesso !&quot;);</span>
+<span class="nc" id="L82">    }</span>
+
+    @Override
+    public void viewAtualizaSucesso() {
+<span class="nc" id="L86">        System.out.println(&quot;Evento atualizado com sucesso !&quot;);</span>
+<span class="nc" id="L87">    }</span>
+
+    @Override
+    public void viewAtualizaErro() {
+<span class="nc" id="L91">        System.out.println(&quot;Erro ao atualizar Evento  !&quot;);</span>
+<span class="nc" id="L92">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>

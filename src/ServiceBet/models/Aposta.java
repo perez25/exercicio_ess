@@ -17,11 +17,10 @@ public class Aposta {
 
     }
 
-    public Aposta(int id, Apostador apostador, float m_aposta, char resultado, Odd odd_actual) {
+    public Aposta(int id, Apostador apostador, float m_aposta, String resultado, Odd odd_actual) {
         this.id = id;
         this.apostador = apostador;
-        this.montanteAposta = m_aposta;
-        this.defineResultado(resultado);
+        defineMontanteEResultadoDeAposta(m_aposta, resultado);
         this.oddFixada = odd_actual.clone();
 
     }
@@ -35,36 +34,14 @@ public class Aposta {
 
     }
 
-    public void defineResultado(char resultado) {
-
-        switch (resultado) {
-            case '1':
-                this.resultado = Evento.Resultado.VITORIA;
-                break;
-            case 'x':
-                this.resultado = Evento.Resultado.EMPATE;
-                break;
-            case '2':
-                this.resultado = Evento.Resultado.DERROTA;
-                break;
-        }
-    }
-
-    /**
-     * @return the id
-     */
     public int getId() {
 
         return id;
     }
 
-    /**
-     * @param id the id to set
-     */
     public void setId(int id) {
         this.id = id;
     }
-    /*getter and setters*/
 
     public Apostador getApostador() {
         return apostador;
@@ -98,12 +75,7 @@ public class Aposta {
         this.resultado = resultado;
     }
 
-    /**
-     *
-     * @param montante
-     * @param resultado
-     */
-    public void aposta(float montante, String resultado) {
+    public void defineMontanteEResultadoDeAposta(float montante, String resultado) {
 
         switch (resultado) {
             case "1":
@@ -121,34 +93,37 @@ public class Aposta {
 
     }
 
-    /**
-     * Calcula o prémio resultante numa aposta na odd1 de um evento
-     *
-     * @return
-     */
     public int calculaPremioDeOdd1() {
 
         return (int) (this.getMAposta() * this.getOddFixada().getOdd1());
     }
 
-    /**
-     * Calcula o prémio resultante numa aposta na odd2 de um evento
-     *
-     * @return
-     */
     public int calculaPremioDeOdd2() {
 
         return (int) (this.getMAposta() * this.getOddFixada().getOdd2());
     }
 
-    /**
-     * Calcula o prémio resultante numa aposta na oddx de um evento
-     *
-     * @return
-     */
     public int calculaPremioDeOddx() {
 
         return (int) (this.getMAposta() * this.getOddFixada().getOddx());
+    }
+
+    public int devolvePremio() {
+        int premio = 0;
+        switch (this.getResultado()) {
+            case VITORIA:
+                premio = this.calculaPremioDeOdd1();
+                break;
+            case EMPATE:
+                premio = this.calculaPremioDeOddx();
+                ;
+                break;
+            case DERROTA:
+                premio = this.calculaPremioDeOdd2();
+                ;
+                break;
+        }
+        return premio;
     }
 
     @Override

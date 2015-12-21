@@ -51,4 +51,9 @@ public class Apostador {
         this.betESScoins -= montante;
     }
 
+    public boolean temSaldoParaApostar(double montante) {
+        return montante <= this.betESScoins;
+
+    }
+
 }

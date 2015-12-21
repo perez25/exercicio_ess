@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>ApostadorController.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;exercicio&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.source.html" class="el_package">ServiceBet.Controllers</a> &gt; <span class="el_source">ApostadorController.java</span></div><h1>ApostadorController.java</h1><pre class="source lang-java linenums">/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package ServiceBet.Controllers;
+
+import ServiceBet.Observer.Observer;
+import ServiceBet.models.Apostador;
+import ServiceBet.views.ApostadorView;
+import java.util.HashMap;
+
+/**
+ *
+ * @author Perez_25
+ */
+public class ApostadorController extends Controller implements Observer {
+
+    private final ApostadorView view;
+    private Apostador modelo;
+
+<span class="nc" id="L22">    public ApostadorController(ApostadorView view, Apostador modelo) {</span>
+<span class="nc" id="L23">        this.view = view;</span>
+<span class="nc" id="L24">        this.modelo = modelo;</span>
+<span class="nc" id="L25">    }</span>
+
+    public void setApostador(Apostador apostador) {
+<span class="nc" id="L28">        this.modelo = apostador;</span>
+<span class="nc" id="L29">    }</span>
+
+    public void setNomeDeApostador(String nome) {
+<span class="nc" id="L32">        this.modelo.setNome(nome);</span>
+<span class="nc" id="L33">    }</span>
+
+    public String getNomeDeApostador() {
+<span class="nc" id="L36">        return this.modelo.getNome();</span>
+    }
+
+    public void setEmailDeApostador(String email) {
+<span class="nc" id="L40">        this.modelo.setEmail(email);</span>
+<span class="nc" id="L41">    }</span>
+
+    public String getEmailDeApostador() {
+<span class="nc" id="L44">        return this.modelo.getEmail();</span>
+    }
+
+    public void setBetEssCoins(double betEssCoins) {
+<span class="nc" id="L48">        this.modelo.setBetESScoins(betEssCoins);</span>
+<span class="nc" id="L49">    }</span>
+
+    public double getBetEssCoinsDeApostador() {
+<span class="nc" id="L52">        return this.modelo.getBetESScoins();</span>
+    }
+
+    public void adicionaBetEssCoinsAoSaldoDeApostador(double montante) {
+<span class="nc" id="L56">        this.modelo.adicionaBetEssCoins(montante);</span>
+<span class="nc" id="L57">    }</span>
+
+    public void removeBetEssCoinsAoSaldoDeApostadoe(double montante) {
+<span class="nc" id="L60">      this.modelo.removeBetEssCoins(montante);</span>
+<span class="nc" id="L61">    }</span>
+
+    public boolean verificaSeExisteApostador(HashMap&lt;String, Apostador&gt; listaApostadores) {
+<span class="nc" id="L64">        return listaApostadores.containsKey(this.modelo.getEmail());</span>
+    }
+
+    public Apostador cria(HashMap&lt;String, Apostador&gt; listaApostadores) {
+<span class="nc" id="L68">        this.view.viewCria();</span>
+
+<span class="nc" id="L70">        String readinput = this.view.getString();</span>
+<span class="nc" id="L71">        String[] tokens = this.splitStringPorToken(readinput, &quot;,&quot;);</span>
+
+<span class="nc" id="L73">        this.setNomeDeApostador(tokens[0]);</span>
+<span class="nc" id="L74">        this.setEmailDeApostador(tokens[1]);</span>
+<span class="nc" id="L75">        this.setBetEssCoins(Double.parseDouble(tokens[2]));</span>
+
+<span class="nc bnc" id="L77" title="All 2 branches missed.">        if (!verificaSeExisteApostador(listaApostadores)) {</span>
+<span class="nc" id="L78">            listaApostadores.put(tokens[1], this.modelo);</span>
+<span class="nc" id="L79">            this.view.viewCriaSucesso();</span>
+<span class="nc" id="L80">            return this.modelo;</span>
+        }
+<span class="nc" id="L82">        this.view.viewJaExisteApostador(tokens[1]);</span>
+<span class="nc" id="L83">        return null;</span>
+    }
+
+    public boolean atualiza(HashMap&lt;String,Apostador&gt; listaApostadores) {
+<span class="nc bnc" id="L87" title="All 2 branches missed.">        if(listaApostadores.containsKey(this.getEmailDeApostador())){</span>
+<span class="nc" id="L88">        this.view.viewAtualiza();</span>
+<span class="nc" id="L89">        String readinput = this.view.getString();</span>
+<span class="nc" id="L90">        String[] tokens = this.splitStringPorToken(readinput, &quot;,&quot;);</span>
+<span class="nc" id="L91">        this.setNomeDeApostador(tokens[0]);</span>
+<span class="nc" id="L92">        this.setEmailDeApostador(tokens[1]);</span>
+<span class="nc" id="L93">        this.setBetEssCoins(Double.parseDouble(tokens[2]));</span>
+<span class="nc" id="L94">        return true;</span>
+        }
+<span class="nc" id="L96">        return false;</span>
+    }
+
+    public void lista() {
+<span class="nc" id="L100">        this.view.viewMostra(this.getNomeDeApostador(), this.getEmailDeApostador(), (float) this.getBetEssCoinsDeApostador());</span>
+<span class="nc" id="L101">    }</span>
+
+    public boolean apaga(HashMap&lt;String, Apostador&gt; listaApostadores) {
+<span class="nc bnc" id="L104" title="All 2 branches missed.">        for (Apostador apostador : listaApostadores.values()) {</span>
+<span class="nc bnc" id="L105" title="All 2 branches missed.">            if (apostador.getEmail().equals(this.modelo.getEmail())) {</span>
+<span class="nc" id="L106">                listaApostadores.remove(this.modelo.getEmail());</span>
+<span class="nc" id="L107">                this.view.viewApagaSucesso();</span>
+<span class="nc" id="L108">                return true;</span>
+            }
+<span class="nc" id="L110">        }</span>
+<span class="nc" id="L111">        this.view.viewApagaErro();</span>
+<span class="nc" id="L112">        return false;</span>
+    }
+
+    @Override
+    public void update(String notificacao) {
+<span class="nc" id="L117">        this.view.viewActualizaNotificacao(notificacao, this.getNomeDeApostador());</span>
+
+<span class="nc" id="L119">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>

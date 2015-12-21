@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Bookie.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;exercicio&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.source.html" class="el_package">ServiceBet.models</a> &gt; <span class="el_source">Bookie.java</span></div><h1>Bookie.java</h1><pre class="source lang-java linenums">/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package ServiceBet.models;
+
+import java.util.HashSet;
+import java.util.Set;
+
+/**
+ *
+ * @author Perez_25
+ */
+public class Bookie {
+
+    private String username;
+    private String password;
+    private Set&lt;Integer&gt; listaIdsEventosCriados;
+
+<span class="nc" id="L21">    public Bookie(String username, String password) {</span>
+<span class="nc" id="L22">        this.username = username;</span>
+<span class="nc" id="L23">        this.password = password;</span>
+<span class="nc" id="L24">        this.listaIdsEventosCriados = new HashSet&lt;&gt;();</span>
+
+<span class="nc" id="L26">    }</span>
+
+<span class="fc" id="L28">    public Bookie() {</span>
+<span class="fc" id="L29">        this.username = &quot;&quot;;</span>
+<span class="fc" id="L30">        this.password = &quot;&quot;;</span>
+<span class="fc" id="L31">        this.listaIdsEventosCriados = new HashSet&lt;&gt;();</span>
+<span class="fc" id="L32">    }</span>
+
+    /**
+     * @return the username
+     */
+    public String getUsername() {
+<span class="nc" id="L38">        return username;</span>
+    }
+
+    /**
+     * @param username the username to set
+     */
+    public void setUsername(String username) {
+<span class="nc" id="L45">        this.username = username;</span>
+<span class="nc" id="L46">    }</span>
+
+    /**
+     * @return the password
+     */
+    public String getPassword() {
+<span class="nc" id="L52">        return password;</span>
+    }
+
+    /**
+     * @param password the password to set
+     */
+    public void setPassword(String password) {
+<span class="nc" id="L59">        this.password = password;</span>
+<span class="nc" id="L60">    }</span>
+
+    /**
+     * @return the listaIdsEventosCriados
+     */
+    public Set&lt;Integer&gt; getListaIdsEventosCriados() {
+<span class="nc" id="L66">        return listaIdsEventosCriados;</span>
+    }
+
+    /**
+     * @param listaIdsEventosCriados the listaIdsEventosCriados to set
+     */
+    public void setListaIdsEventosCriados(Set&lt;Integer&gt; listaIdsEventosCriados) {
+<span class="nc" id="L73">        this.listaIdsEventosCriados = listaIdsEventosCriados;</span>
+<span class="nc" id="L74">    }</span>
+
+    /**
+     *  adiciona um evento a um bookie 
+     * @param idEvento
+     */
+    public void adicionaEventoABookie(int idEvento) {
+<span class="nc" id="L81">        this.listaIdsEventosCriados.add(idEvento);</span>
+<span class="nc" id="L82">    }</span>
+
+    /**
+     * remove um evento a um bookie
+     * @param idEvento
+     */
+    public void removeEventoABookie(int idEvento) {
+<span class="nc" id="L89">        this.listaIdsEventosCriados.remove(idEvento);</span>
+<span class="nc" id="L90">    }</span>
+    /**
+     * Verifica se o bookie segue um evento
+     * @param idEvento
+     * @return boolean
+     */
+    public boolean verificaSeBookieCriouEvento(int idEvento) {
+<span class="nc" id="L97">        return this.listaIdsEventosCriados.contains(idEvento);</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>
